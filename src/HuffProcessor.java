@@ -54,7 +54,7 @@ public class HuffProcessor {
 		out.close();
 	}
 
-	public int[] readForCounts(BitInputStream in) {
+	private int[] readForCounts(BitInputStream in) {
 		int[] freq = new int[ALPH_SIZE + 1];
 		freq[PSEUDO_EOF] = 1;
 
@@ -81,6 +81,9 @@ public class HuffProcessor {
 			HuffNode right = pq.remove();
 			HuffNode t = new HuffNode(1,left.myWeight + right.myWeight,left,right);
 			pq.add(t);
+			if (myDebugLevel >= DEBUG_HIGH) {
+				System.out.printf("pq created with %d nodes\n", pq.size());
+			}
 		}
 		HuffNode root = pq.remove();
 		return root;
@@ -95,6 +98,9 @@ public class HuffProcessor {
 	private void codingHelper(HuffNode root, String path, String[] encodings) {
 		if (root.myLeft == null && root.myRight == null) {
 			encodings[root.myValue] = path;
+			if (myDebugLevel >= DEBUG_HIGH) {
+				System.out.printf("encoding for %d is %s\n", root.myValue, path);
+			}
 			return;
 		}
 		codingHelper(root.myLeft, path + "0", encodings);
